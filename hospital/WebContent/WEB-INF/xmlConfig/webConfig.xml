@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/beans       
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+        http://www.springframework.org/schema/context   
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+        
+	<!-- 视图解释类 -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix">
+			<value>/WebPage/</value>
+		</property>
+	</bean>
+	
+	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager" />
+    <!-- 以.html为后缀名访问，默认返回数据类型是 text/html， 所以要修改返回的数据类型 -->
+    <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean"> 
+        <property name="mediaTypes">  
+            <map>  
+                <entry key="html" value="application/json;charset=UTF-8"/> 
+            </map>  
+        </property> 
+    </bean>
+
+	<!-- 自动扫描的包名 ,扫描控制层 -->
+	<context:component-scan base-package="action">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<!-- service自动装配 -->
+	<context:component-scan base-package="serviceimpl">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+
+	<!-- repository自动装配 -->
+	<context:component-scan base-package="repositoryimpl">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Repository" />
+	</context:component-scan>
+</beans>  
